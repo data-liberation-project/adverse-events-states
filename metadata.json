@@ -5,5 +5,10 @@
       "latitude_column": "LAT",
       "longitude_column": "LON"
     }
+  },
+  "permissions": {
+    "datasette-comments-access": {
+      "unauthenticated": true
+    }
   }
 }

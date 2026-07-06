@@ -1,0 +1,10 @@
+.claude/
+venv/
+__pycache__/
+*.pptx
+make_presentation.py
+generate_notebooks.py
+figures/
+.DS_Store
+temp.ipynb
+datasette-env/
