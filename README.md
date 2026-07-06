@@ -1,10 +1,8 @@
-# Public Safety Data
+# Adverse Events Statewide Data
 
 ## Project Structure
 
 ```text
-Public-Safety/
-│
 ├── California/
 │   └── CA-Hospital Data with Geocodes.csv
 │   └── CA - Final_PRA_29194 - 2026-04-08.xlsx - Data Dictionary.csv
@@ -45,7 +43,7 @@ Public-Safety/
 
 ```bash
 git clone <repository-url>
-cd Public-Safety
+cd adverse-events-statewide
 ```
 
 ---
