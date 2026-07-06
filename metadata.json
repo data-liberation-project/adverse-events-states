@@ -1,0 +1,9 @@
+{
+  "title": "Patient Safety Explorer",
+  "plugins": {
+    "datasette-cluster-map": {
+      "latitude_column": "LAT",
+      "longitude_column": "LON"
+    }
+  }
+}
