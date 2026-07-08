@@ -6,7 +6,10 @@ seaborn
 jupyter
 nbconvert
 nbformat
-datasette>=1.0a23
+datasette==1.0a32
 datasette-cluster-map
-datasette-comments
+datasette-comments==0.1.2a6
 datasette-vega
+datasette-edit-schema==0.8a5
+datasette-configure-fts==1.2a0
+datasette-pretty-json
