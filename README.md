@@ -20,12 +20,39 @@
 
 ## Technical documentation 
 
+### Setup 
+
+Clone this repo:
+
+```bash
+git clone https://github.com/data-liberation-project/adverse-events-states.git
+cd adverse-events-states
+```
+
+Install [pipenv](https://pipenv.pypa.io/), if you don't already have it:
+
+```bash
+pip install pipenv
+```
+
+Install the project's dependencies:
+
+```bash
+make install
+```
+
 ### Running Datasette locally 
 
 Start the server:
 
 ```bash
-python -m datasette patient_safety.db --metadata metadata.json
+make run
+```
+
+Start the server:
+
+```bash
+make run
 ```
 
 The application will be available at:
