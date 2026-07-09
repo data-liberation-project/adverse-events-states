@@ -10,5 +10,29 @@
     "datasette-comments-access": {
       "unauthenticated": true
     }
+  },
+  "databases": {
+    "patient_safety": {
+      "tables": {
+        "_sqlite_migrations": {"hidden": true},
+        "catalog_columns": {"hidden": true},
+        "catalog_databases": {"hidden": true},
+        "catalog_foreign_keys": {"hidden": true},
+        "catalog_indexes": {"hidden": true},
+        "catalog_tables": {"hidden": true},
+        "catalog_views": {"hidden": true},
+        "column_types": {"hidden": true},
+        "datasette_comments_comments": {"hidden": true},
+        "datasette_comments_reactions": {"hidden": true},
+        "datasette_comments_threads": {"hidden": true},
+        "datasette_user_profile_photos": {"hidden": true},
+        "datasette_user_profiles": {"hidden": true},
+        "metadata_columns": {"hidden": true},
+        "metadata_databases": {"hidden": true},
+        "metadata_instance": {"hidden": true},
+        "metadata_resources": {"hidden": true},
+        "queries": {"hidden": true}
+      }
+    }
   }
 }
