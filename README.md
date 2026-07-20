@@ -1,23 +1,6 @@
 # Adverse Events State by State Data
 
-- What adverse events are
-- How they are/aren't tracked across the country
-- Why they're important, with some examples from other investigations or research
-
-## Data
-
-- Links to requests on MuckRock
-- List other states we've filed to
-- Summary of t
-
-## Caveats and limitations
-
-- What we know about how different each dataset is
-- Any specifics we're concerned about for each dataset
-
-## Technical documentation
-
-### Setup
+## Setup
 
 Clone this repo:
 
@@ -34,12 +17,48 @@ pip install pipenv
 
 Install the project's dependencies, finish the set up and run it:
 
+### macOS / Linux
+
 ```bash
 # Install the project's dependencies
 make install
 
 # Start the server
 make run
+
+# The application will be available
+http://127.0.0.1:8001
+```
+
+### Windows
+
+`make` isn't available by default on Windows, so either install it or run the underlying commands directly.
+
+**Option 1: Install Make**
+
+Install [Make for Windows](https://gnuwin32.sourceforge.net/packages/make.htm), or via a package manager:
+
+```powershell
+choco install make
+# or
+winget install GnuWin32.Make
+```
+
+Then use the same commands as macOS/Linux:
+
+```powershell
+make install
+make run
+```
+
+**Option 2: Run the commands directly (no Make required)**
+
+```powershell
+# Install the project's dependencies
+pipenv sync
+
+# Start the server
+pipenv run datasette serve patient_safety.db --metadata metadata.json --setting sql_time_limit_ms 5000 --setting facet_suggest_time_limit_ms 5000 --setting facet_time_limit_ms 10000
 
 # The application will be available
 http://127.0.0.1:8001
