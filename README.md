@@ -37,11 +37,25 @@ pip install pipenv
 
 Install the project's dependencies, finish the set up and run it:
 
+`patient_safety.db` isn't tracked in this repo — once every state's data is loaded, it's larger than GitHub's 100MB file size limit. Build it locally instead from the CSVs in `data/processed/`, as shown below.
+
 ### macOS / Linux
 
 ```bash
 # Install the project's dependencies
 make install
+
+# Build the database
+# This loads each state's CSV from data/processed/ into its own table
+# (california, colorado, washington, etc.)
+for dir in data/processed/*/; do
+  state=$(basename "$dir")
+  csv=$(find "$dir" -maxdepth 1 -name "*.csv")
+  if [ -n "$csv" ]; then
+    table=$(echo "$state" | tr '[:upper:]' '[:lower:]')
+    pipenv run sqlite-utils insert patient_safety.db "$table" "$csv" --csv --replace
+  fi
+done
 
 # Start the server
 make run
@@ -64,18 +78,32 @@ choco install make
 winget install GnuWin32.Make
 ```
 
-Then use the same commands as macOS/Linux:
+Then install the project's dependencies and start the server the same way as macOS/Linux:
 
 ```powershell
 make install
 make run
 ```
 
+Build the database using the PowerShell commands from Option 2 below (Make for Windows doesn't include the Unix tools the macOS/Linux database-build step relies on).
+
 **Option 2: Run the commands directly (no Make required)**
 
 ```powershell
 # Install the project's dependencies
 pipenv sync
+
+# Build the database
+# This loads each state's CSV from data/processed/ into its own table
+# (california, colorado, washington, etc.)
+Get-ChildItem -Directory data/processed | ForEach-Object {
+    $state = $_.Name
+    $csv = Get-ChildItem -Path $_.FullName -Filter *.csv | Select-Object -First 1
+    if ($csv) {
+        $table = $state.ToLower()
+        pipenv run sqlite-utils insert patient_safety.db $table $csv.FullName --csv --replace
+    }
+}
 
 # Start the server
 pipenv run datasette serve patient_safety.db --metadata metadata.json --setting sql_time_limit_ms 5000 --setting facet_suggest_time_limit_ms 5000 --setting facet_time_limit_ms 10000

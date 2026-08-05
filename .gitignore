@@ -8,3 +8,4 @@ figures/
 .DS_Store
 temp.ipynb
 datasette-env/
+patient_safety.db
