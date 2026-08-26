@@ -4,7 +4,7 @@
 - Background on this data
 - What are adverse events? What is the field of "patient safety"?
 
-# Data
+## Data
 
 - What states of data do we have? What summary overview can we say about each dataset?
 - Links to requests on MuckRock
@@ -12,138 +12,73 @@
 - Why are they important?
 - Overview of where to find that data and how this project is structured
 
-# Caveats and Limitations
+## Caveats and Limitations
 
 - This is where we give our readers the "here be dragons" warning. What challenges and pitfalls will they likely encounter with the data? How can they solve those?
 - What do we know about how different each dataset is for the states we have? Do the conclusions reporters can reach with each dataset vary?
 - Any specifics we're concerned about for each dataset?
 
-# Technical documentation
 
-## Setup
+## Requests
 
-Clone this repo:
-
-```bash
-git clone https://github.com/data-liberation-project/adverse-events-states.git
-cd adverse-events-states
-```
-
-Install [pipenv](https://pipenv.pypa.io/), if you don't already have it:
-
-```bash
-pip install pipenv
-```
-
-> **Don't create your own virtualenv before running pipenv commands.** Pipenv creates and manages its own virtual environment automatically — you don't need `python -m venv venv` first. If a different virtualenv is already active when you run pipenv, pipenv will quietly install into *that* environment instead of its own (it prints a `Courtesy Notice: Pipenv found itself running within a virtual environment...` when this happens — easy to miss). This can leave packages installed in one environment while `datasette serve` runs from another, which shows up as confusing, hard-to-diagnose errors later. If you already have a venv active from something else, either deactivate it first or run `PIPENV_IGNORE_VIRTUALENVS=1 pipenv install`.
-
-`patient_safety.db` isn't tracked in this repo — once every state's data is loaded, it's larger than GitHub's 100MB file size limit. Build it locally instead from the CSVs in `data/processed/`, as shown below.
-
-### macOS / Linux
-
-```bash
-# Install the project's dependencies
-make install
-```
-
-**Verify the plugins installed correctly before moving on:**
-
-```bash
-pipenv run datasette plugins
-```
-
-This should print a non-empty list including `datasette-vega`, `datasette-cluster-map`, and `datasette-comments` (plus a handful of others). If it prints `[]` instead, the dependencies didn't actually land in the environment `datasette` runs from — re-run the install to force it from the lockfile:
-
-```bash
-pipenv install
-pipenv run datasette plugins   # confirm it's non-empty now
-```
-
-If it's still empty, check that pipenv is pointing at the environment you expect with `pipenv --venv`. See [Troubleshooting](#troubleshooting) below for what happens if you skip this check.
-
-```bash
-# Build the database
-# This loads each state's CSV from data/processed/ into its own table
-# (california, colorado, washington, etc.)
-for dir in data/processed/*/; do
-  state=$(basename "$dir")
-  csv=$(find "$dir" -maxdepth 1 -name "*.csv")
-  if [ -n "$csv" ]; then
-    table=$(echo "$state" | tr '[:upper:]' '[:lower:]')
-    pipenv run sqlite-utils insert patient_safety.db "$table" "$csv" --csv --replace
-  fi
-done
-
-# Start the server
-make run
-
-# The application will be available
-http://127.0.0.1:8001
-```
-
-### Windows
-
-`make` isn't available by default on Windows, so either install it or run the underlying commands directly.
-
-**Option 1: Install Make**
-
-Install [Make for Windows](https://gnuwin32.sourceforge.net/packages/make.htm), or via a package manager:
-
-```powershell
-choco install make
-# or
-winget install GnuWin32.Make
-```
-
-Then install the project's dependencies and start the server the same way as macOS/Linux:
-
-```powershell
-make install
-```
-
-**Verify the plugins installed correctly before moving on:**
-
-```powershell
-pipenv run datasette plugins
-```
-
-This should print a non-empty list including `datasette-vega`, `datasette-cluster-map`, and `datasette-comments`. If it prints `[]`, force a reinstall from the lockfile with `pipenv install`, then check again. See [Troubleshooting](#troubleshooting) for details.
-
-```powershell
-make run
-```
-
-Build the database using the PowerShell commands from Option 2 below (Make for Windows doesn't include the Unix tools the macOS/Linux database-build step relies on).
-
-**Option 2: Run the commands directly (no Make required)**
-
-```powershell
-# Install the project's dependencies
-pipenv sync
-
-# Verify the plugins installed correctly
-pipenv run datasette plugins
-# Should list datasette-vega, datasette-cluster-map, datasette-comments, and others.
-# If it prints an empty list, run: pipenv install
-# then check again before continuing.
-
-# Build the database
-# This loads each state's CSV from data/processed/ into its own table
-# (california, colorado, washington, etc.)
-Get-ChildItem -Directory data/processed | ForEach-Object {
-    $state = $_.Name
-    $csv = Get-ChildItem -Path $_.FullName -Filter *.csv | Select-Object -First 1
-    if ($csv) {
-        $table = $state.ToLower()
-        pipenv run sqlite-utils insert patient_safety.db $table $csv.FullName --csv --replace
-    }
-}
-
-# Start the server
-pipenv run datasette serve patient_safety.db --metadata metadata.json --setting sql_time_limit_ms 5000 --setting facet_suggest_time_limit_ms 5000 --setting facet_time_limit_ms 10000
-
-# The application will be available
-http://127.0.0.1:8001
-```
-
-Open this address in your web browser.
+| Jurisdiction | Agency | Status | Request Link |
+|---|---|---|---|
+| Alabama | Alabama Medicaid Agency | Fix Required | [MuckRock request](https://www.muckrock.com/foi/alabama-159/aer-al-medicaid-agency-207530/) |
+| Arkansas | Department of Health | Rejected | [MuckRock request](https://www.muckrock.com/foi/arkansas-114/aer-ar-dept-of-health-207532/) |
+| California | California Department of Public Health | Completed | [MuckRock request](https://www.muckrock.com/foi/california-52/aer-ca-dept-of-public-health-207525/) |
+| California | California Department of Public Health | Awaiting Response | [MuckRock request](https://www.muckrock.com/foi/california-52/aer-ca-dept-of-public-health-215077/) |
+| Colorado | Department of Public Health and Environment | Completed | [MuckRock request](https://www.muckrock.com/foi/colorado-127/aer-co-dept-of-public-health-and-env-207526/) |
+| Colorado | Department of Public Health and Environment | Completed | [MuckRock request](https://www.muckrock.com/foi/colorado-127/aer-co-dept-of-public-health-and-env-215078/) |
+| Connecticut | Department of Public Health | Awaiting Response | [MuckRock request](https://www.muckrock.com/foi/connecticut-53/aer-ct-dept-of-public-health-207527/) |
+| Delaware | Department of Health and Social Services | Rejected | [MuckRock request](https://www.muckrock.com/foi/delaware-236/aer-de-dept-of-health-and-social-services-207533/) |
+| Delaware | Department of Health and Social Services | Rejected | [MuckRock request](https://www.muckrock.com/foi/delaware-236/aer-de-dept-of-health-and-social-services-211210/) |
+| Florida | Agency for Healthcare Administration | Rejected | [MuckRock request](https://www.muckrock.com/foi/florida-34/aer-fl-agency-for-healthcare-admin-207528/) |
+| Florida | Agency for Healthcare Administration | Rejected | [MuckRock request](https://www.muckrock.com/foi/florida-34/aer-fl-agency-for-healthcare-admin-210811/) |
+| Georgia | Department of Human Services | Rejected | [MuckRock request](https://www.muckrock.com/foi/georgia-230/aer-ga-dept-of-human-services-207529/) |
+| Georgia | Department of Human Services | Rejected | [MuckRock request](https://www.muckrock.com/foi/georgia-230/aer-ga-dept-of-human-services-210816/) |
+| Idaho | Department of Health and Welfare | Completed | [MuckRock request](https://www.muckrock.com/foi/idaho-228/aer-id-dept-of-health-and-welfare-207534/) |
+| Illinois | Department of Public Health | Rejected | [MuckRock request](https://www.muckrock.com/foi/illinois-168/aer-il-dept-of-public-health-207535/) |
+| Kansas | Department of Health & Environment | Rejected | [MuckRock request](https://www.muckrock.com/foi/kansas-111/aer-ks-dept-of-health-and-environment-208098/) |
+| Kansas | Kansas Department for Aging and Disability Services | Rejected | [MuckRock request](https://www.muckrock.com/foi/kansas-111/aer-ks-dept-of-aging-and-disability-services-208801/) |
+| Kansas | Kansas Department for Aging and Disability Services | Rejected | [MuckRock request](https://www.muckrock.com/foi/kansas-111/aer-ks-dept-of-aging-and-disability-services-redo-210806/) |
+| Louisiana | Department of Health | Rejected | [MuckRock request](https://www.muckrock.com/foi/louisiana-233/aer-la-department-of-health-208165/) |
+| Louisiana | Department of Health | Rejected | [MuckRock request](https://www.muckrock.com/foi/louisiana-233/aer-la-department-of-health-210809/) |
+| Maine | Department of Health and Human Services | Rejected | [MuckRock request](https://www.muckrock.com/foi/maine-13/aer-me-dept-of-health-and-human-services-208100/) |
+| Maine | Department of Health and Human Services | Rejected | [MuckRock request](https://www.muckrock.com/foi/maine-13/aer-me-dept-of-health-and-human-services-210812/) |
+| Maryland | Department of Health and Mental Hygiene | Rejected | [MuckRock request](https://www.muckrock.com/foi/maryland-154/aer-md-department-of-health-and-mental-hygiene-208108/) |
+| Maryland | Department of Health and Mental Hygiene | Rejected | [MuckRock request](https://www.muckrock.com/foi/maryland-154/aer-md-department-of-health-and-mental-hygiene-redo-210814/) |
+| Massachusetts | Department of Public Health | Fix Required | [MuckRock request](https://www.muckrock.com/foi/massachusetts-1/aer-ma-department-of-public-health-208109/) |
+| Michigan | Michigan Department of Health and Human Services | Completed | [MuckRock request](https://www.muckrock.com/foi/michigan-117/aer-mi-department-of-health-and-human-services-208166/) |
+| Minnesota | Minnesota Department of Health | Rejected | [MuckRock request](https://www.muckrock.com/foi/minnesota-156/aer-mn-department-of-health-208110/) |
+| Minnesota | Minnesota Department of Health | Rejected | [MuckRock request](https://www.muckrock.com/foi/minnesota-156/aer-mn-department-of-health-210808/) |
+| Missouri | Department of Health and Senior Services | Completed | [MuckRock request](https://www.muckrock.com/foi/missouri-299/aer-mo-department-of-health-and-human-services-208167/) |
+| Nebraska | Department of Health and Human Services | Rejected | [MuckRock request](https://www.muckrock.com/foi/nebraska-300/aer-ne-department-of-health-and-human-services-208168/) |
+| Nevada | Department of Health and Human Services | Consolidated | [MuckRock request](https://www.muckrock.com/foi/nevada-301/aer-nv-state-health-division-208113/) |
+| Nevada | Nevada Health Authority | Completed | [MuckRock request](https://www.muckrock.com/foi/nevada-301/aer-nv-state-health-division-210801/) |
+| New Hampshire | Department of Health and Human Services | Rejected | [MuckRock request](https://www.muckrock.com/foi/new-hampshire-81/aer-nh-department-of-health-and-human-services-208169/) |
+| New Hampshire | Department of Health and Human Services | Rejected | [MuckRock request](https://www.muckrock.com/foi/new-hampshire-81/aer-nh-department-of-health-and-human-services-210810/) |
+| New Jersey | Department of Health | Awaiting Response | [MuckRock request](https://www.muckrock.com/foi/new-jersey-229/aer-nj-department-of-health-and-senior-services-208115/) |
+| New York | New York State Department of Health | Rejected | [MuckRock request](https://www.muckrock.com/foi/new-york-16/aer-ny-department-of-health-208123/) |
+| North Dakota | Department of Health | Rejected | [MuckRock request](https://www.muckrock.com/foi/north-dakota-232/aer-nh-department-of-health-208170/) |
+| Ohio | Department of Health | Rejected | [MuckRock request](https://www.muckrock.com/foi/ohio-116/aer-oh-department-of-health-208124/) |
+| Oklahoma | Oklahoma Department of Health | Awaiting Acknowledgement | [MuckRock request](https://www.muckrock.com/foi/oklahoma-248/aer-ok-department-of-health-208171/) |
+| Oregon | Oregon Health Authority | Rejected | [MuckRock request](https://www.muckrock.com/foi/oregon-158/aer-or-health-authority-208125/) |
+| Oregon | Patient Safety Commission | Completed | [MuckRock request](https://www.muckrock.com/foi/oregon-158/aer-or-health-authority-209408/) |
+| Oregon | Patient Safety Commission | Completed | [MuckRock request](https://www.muckrock.com/foi/oregon-158/aer-or-patient-safety-commission-211209/) |
+| Pennsylvania | Pennsylvania Department of Health | Rejected | [MuckRock request](https://www.muckrock.com/foi/pennsylvania-126/aer-pa-patient-safety-authority-208126/) |
+| Rhode Island | Department of Health | Fix Required | [MuckRock request](https://www.muckrock.com/foi/rhode-island-82/aer-ri-department-of-health-208127/) |
+| Rhode Island | Department of Health | Awaiting Response | [MuckRock request](https://www.muckrock.com/foi/rhode-island-82/aer-ri-department-of-health-redo-212247/) |
+| South Carolina | Department of Health and Environmental Control | Awaiting Acknowledgement | [MuckRock request](https://www.muckrock.com/foi/south-carolina-302/aer-sc-department-of-health-and-environmental-control-208128/) |
+| South Dakota | Department of Health | Awaiting Acknowledgement | [MuckRock request](https://www.muckrock.com/foi/south-dakota-303/aer-south-dakota-department-of-health-208136/) |
+| Tennessee | Department of Health | Rejected | [MuckRock request](https://www.muckrock.com/foi/tennessee-155/aer-tn-dept-of-health-208159/) |
+| Texas | Texas Health and Human Services | Rejected | [MuckRock request](https://www.muckrock.com/foi/texas-109/aer-tx-department-of-health-and-human-services-208172/) |
+| Texas | Texas Department of State Health Services | Rejected | [MuckRock request](https://www.muckrock.com/foi/texas-109/aer-tx-department-of-state-health-services-208802/) |
+| Texas | Texas Department of State Health Services | Completed | [MuckRock request](https://www.muckrock.com/foi/texas-109/aer-tx-department-of-state-health-services-210805/) |
+| Utah | Utah Department of Health and Human Services | Rejected | [MuckRock request](https://www.muckrock.com/foi/utah-234/aer-ut-dept-of-health-208160/) |
+| Vermont | Vermont Department Of Health | Rejected | [MuckRock request](https://www.muckrock.com/foi/vermont-80/aer-vt-dept-of-health-208161/) |
+| Washington | Department of Health | Completed | [MuckRock request](https://www.muckrock.com/foi/washington-54/aer-wa-dept-of-health-208163/) |
+| West Virginia | Department of Health and Human Resources | Rejected | [MuckRock request](https://www.muckrock.com/foi/west-virginia-304/aer-wv-department-of-health-and-human-resources-208175/) |
+| West Virginia | West Virginia Department Of Health | No Responsive Documents | [MuckRock request](https://www.muckrock.com/foi/west-virginia-304/aer-wv-department-of-health-and-human-resources-208800/) |
+| Wisconsin | Wisconsin Department of Health Services | No Responsive Documents | [MuckRock request](https://www.muckrock.com/foi/wisconsin-146/aer-wi-department-of-health-services-208176/) |
+| Wyoming | Wyoming Department of Health | Rejected | [MuckRock request](https://www.muckrock.com/foi/wyoming-305/aer-wy-dept-of-health-208164/) |
+| Wyoming | Wyoming Department of Health | Rejected | [MuckRock request](https://www.muckrock.com/foi/wyoming-305/aer-wy-dept-of-health-redo-210807/) |
