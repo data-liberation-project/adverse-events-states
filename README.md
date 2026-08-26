@@ -1,20 +1,63 @@
 # Adverse Events State by State Data
 
-- What project is that part of? DLP, patient safety etc.
+- What project is that part of? DLP, patient safety intiative 
 - Background on this data
 - What are adverse events? What is the field of "patient safety"?
 
 ## Data
 
 - What states of data do we have? What summary overview can we say about each dataset?
-- Links to requests on MuckRock
 - How are/aren't these data tracked across the country?
 - Why are they important?
 - Overview of where to find that data and how this project is structured
 
+### Summaries of states that have returned useful data
+
+#### California
+- Timeframe: January 2023 - December 2024 (though [we requested a decade of data more](https://www.muckrock.com/foi/california-52/aer-ca-dept-of-public-health-215077/))
+- Number of rows: 4, 682
+- Important variables:
+    - `recvdate` - date given to the event in the data, could be the day the event was recorded or recieved and not the date of the event itself
+    - `intakeid` - could be the unique id of the event
+    - `adverse_event` - general description of the event
+    - `finding_detail`- whether the event was "substantiated" or "unsubtantiated"
+    - `name` - name of the facility
+    - `aspen_facid` - facility id
+
+#### Colorado
+- Timeframe: January 2013 - December 2024
+- Number of rows: 63, 016
+- Important variables:
+    - `facility_name` - name of the facility
+    - `bed_license_total` - licensed amount of beds, which could be useful for a rough rate
+    - `owner_company` - company that owns the hospital, which could be useful for digging into trends in hospitals owned by same overarching company
+    - `occurence_id` - could be the unique id of the event
+    - `type_of_occurence` - the type of adverse event
+    - `occurence_date` - date given to the event in the data
+    - `occurcence_description` - free text description events
+        - **These are very detailed descriptions that would critical for reporting**, but we only recieved them for years 2023 and 2024. When we requested a decade more of data, we agreed to leave this aside because the agency told us "the cost and processing time will be significant" for a "manual review of over 50,000 occurrence descriptions." But that could be revisited or a future request could be made for the occurence descriptions of only some types of requests.
+
+#### Washington
+- Timeframe: 2014 - 2025
+- Number of rows: 188,160
+- Important variables:
+    - `facility_name` - name of the facility
+    - `event_type` - grouping for adverse types
+    - `adverse_event` - more specific adverse event type
+    - `facility_size` - could be total number of licensed beds, useful for a rough rate
+    - `year` - year event took place in; we didn't recieve dates for events in this dataset
+
+#### Michigan 
+- Timeframe: January 2023 - December 2024
+- Number of rows: 11, 980
+- Important variables:
+    - **This data seems to be only events that [happened at Michigan's state-owned mental health hospitals](https://www.muckrock.com/foi/michigan-117/aer-mi-department-of-health-and-human-services-208166/)** and could be worth requesting broader data
+    - `event_type` - grouping for adverse types
+    - `date_of_incident` - date given to the event in the data
+
 ## Caveats and Limitations
 
-- This is where we give our readers the "here be dragons" warning. What challenges and pitfalls will they likely encounter with the data? How can they solve those?
+- What challenges and pitfalls will they likely encounter with the data? How can they solve those?
 - What do we know about how different each dataset is for the states we have? Do the conclusions reporters can reach with each dataset vary?
 - Any specifics we're concerned about for each dataset?
 
