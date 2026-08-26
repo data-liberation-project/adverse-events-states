@@ -1,3 +1,10 @@
+# Dillon's ignored files 
+scratch/
+
+
+
+
+# Devanshu's ignored files
 .claude/
 venv/
 __pycache__/
